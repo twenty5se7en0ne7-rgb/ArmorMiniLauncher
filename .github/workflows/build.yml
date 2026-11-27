@@ -22,17 +22,10 @@ jobs:
       - name: Extract project ZIP
         run: |
           mkdir extracted
-          unzip -q ArmorMiniLauncher_Fixed_Ready.zip -d extracted
-          ROOT=$(find extracted -name gradlew -type f | head -n 1)
-          if [ -z "$ROOT" ]; then
-            ROOT=$(find extracted -name build.gradle -o -name build.gradle.kts | head -n 1)
-          fi
-          if [ -z "$ROOT" ]; then
-            echo "Gradle project not found"
-            exit 1
-          fi
-          DIR=$(dirname "$ROOT")
-          echo "PROJECT_DIR=$DIR" >> $GITHUB_ENV
+          unzip -q ArmorMiniLauncher_Fixed_Ready2.zip -d extracted
+          ROOT=$(find extracted -name build.gradle -o -name build.gradle.kts | head -1)
+          PROJECT_DIR=$(dirname "$ROOT")
+          echo "PROJECT_DIR=$PROJECT_DIR" >> $GITHUB_ENV
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -40,12 +33,7 @@ jobs:
       - name: Build APK
         run: |
           cd "$PROJECT_DIR"
-          if [ -f gradlew ]; then
-            chmod +x gradlew
-            ./gradlew assembleRelease --no-daemon
-          else
-            gradle assembleRelease --no-daemon
-          fi
+          gradle assembleRelease --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
