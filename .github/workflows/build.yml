@@ -52,4 +52,3 @@ jobs:
         with:
           name: ArmorMiniLauncher-apk
           path: "**/build/outputs/apk/release/*.apk"
-          
